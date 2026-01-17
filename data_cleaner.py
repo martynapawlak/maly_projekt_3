@@ -39,9 +39,6 @@ def normalize_dataframe(df):
 
     return df_cleaned, changes_count
 
-import pandas as pd
-
-import pandas as pd
 
 def unify_station_codes(data_dict, df_meta):
     """
@@ -65,7 +62,6 @@ def unify_station_codes(data_dict, df_meta):
         if df_meta.index.name:
             col_new = df_meta.index.name
         else:
-            # Fallback jeśli indeks nie ma nazwy
             col_new = df_meta_temp.columns[0] 
 
     mapowanie = {}
@@ -273,12 +269,11 @@ def fix_midnight_dates(df):
         print("Indeks nie jest typu datetime. Próbuję konwersji...")
         df.index = pd.to_datetime(df.index)
 
-    # Logika przesunięcia o 1 sekundę
     # Pobieramy indeks jako Serię, żeby móc użyć .where
     dates = df.index.to_series()
     
-    # JEŚLI godzina != 0 -> Zostaw bez zmian
-    # W PRZECIWNYM RAZIE (godzina 00:00) -> Odejmij 1 sekundę
+    # Jeśli godzina != 0 -> Zostaw bez zmian
+    # W przeciwnym wypadku (godzina 00:00) -> Odejmij 1 sekundę
     # Efekt: 2024-01-02 00:00:00 zamieni się na 2024-01-01 23:59:59
     new_dates = dates.where(
         dates.dt.hour != 0, 
