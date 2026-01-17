@@ -7,7 +7,6 @@ gios_archive_url = "https://powietrze.gios.gov.pl/pjp/archives/downloadFile/"
 
 # funkcja do ściągania podanego archiwum
 def download_gios_archive(year, gios_id, filename):
-    print(f"pobieram dane z roku {year}")
     # Pobranie archiwum ZIP do pamięci
     url = f"{gios_archive_url}{gios_id}"
     response = requests.get(url)
@@ -23,10 +22,7 @@ def download_gios_archive(year, gios_id, filename):
             # wczytaj plik do pandas
             with z.open(filename) as f:
                 try:
-                    if year==2015:
-                        df = pd.read_excel(f, header=0, index_col=0)
-                    else:
-                        df = pd.read_excel(f, header=1, index_col=0)
+                    df = pd.read_excel(f, header=None)
                 except Exception as e:
                     print(f"Błąd przy wczytywaniu {year}: {e}")
     return df
@@ -41,7 +37,7 @@ def download_meta_data(gios_id):
   response.raise_for_status()
   with io.BytesIO(response.content) as f:
     try:
-      df_meta = pd.read_excel(f, header=0, index_col="Kod stacji")
+      df_meta = pd.read_excel(f, header=0)
     except  Exception as e:
       print(f"Błąd przy wczytywaniu metadanych: {e}")
   return df_meta
